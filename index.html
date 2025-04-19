@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Caroline Lucia</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body class="allbg">
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url('assets/img/IS201 IMG/map.webp')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="site-heading">
+                            <h1>Caroline Lucia Travel</h1>
+                            <span class="subheading">International Experience Design</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main Content-->
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Map Button-->
+                    <div class="map-button">
+                            <h2 class="map-button">Add your destinations to the interactive map!</h2>
+                            <br>
+                        </a>
+                    </div>
+                    <!-- Pager-->
+                </div>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+                         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+                         crossorigin=""/>
+                   <script src="https://cdn.tailwindcss.com"></script>
+                   <link rel="preconnect" href="https://fonts.googleapis.com">
+                   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+                   <style>
+                       /* Basic styling for the map container */
+                       #map {
+                           height: 60vh; /* Adjust height as needed */
+                           width: 100%;
+                           border-radius: 0.5rem; /* Rounded corners */
+                           box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+                       }
+                       /* Ensure Leaflet popups fit content */
+                       .leaflet-popup-content-wrapper {
+                           border-radius: 0.375rem; /* Rounded corners for popups */
+                       }
+                       .leaflet-popup-content {
+                           margin: 10px 15px;
+                           font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+                       }
+                       /* Custom marker icons using SVG */
+                       .custom-marker-icon {
+                           text-align: center;
+                           line-height: 30px; /* Center the SVG vertically */
+                       }
+                       .custom-marker-icon svg {
+                           width: 30px;
+                           height: 30px;
+                           display: block;
+                           margin: 0 auto; /* Center the SVG horizontally */
+                           filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); /* Add subtle shadow */
+                       }
+                       /* Style for the list items */
+                       .place-item {
+                           transition: background-color 0.2s ease-in-out;
+                       }
+                       .place-item:hover {
+                           background-color: #f0f0f0; /* Light gray on hover */
+                       }
+                       .place-item button {
+                           opacity: 0; /* Hide delete button initially */
+                           transition: opacity 0.2s ease-in-out;
+                       }
+                       .place-item:hover button {
+                           opacity: 1; /* Show delete button on hover */
+                       }
+                       /* Use Inter font */
+                       body {
+                           font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+                       }
+                       /* Loading spinner styles */
+                       .spinner {
+                           border: 2px solid rgba(255, 255, 255, 0.3);
+                           border-radius: 50%;
+                           border-top-color: #fff;
+                           width: 16px;
+                           height: 16px;
+                           animation: spin 1s linear infinite;
+                           display: inline-block; /* Keep it inline with text */
+                           margin-right: 8px; /* Space between spinner and text */
+                       }
+                       @keyframes spin {
+                           to { transform: rotate(360deg); }
+                       }
+                   </style>
+               </head>
+               <body class="bg-gray-100 p-4 md:p-8">
+               
+                   <div class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                       <h1 class="text-2xl md:text-3xl font-bold mb-6 text-center text-gray-800">My Travel Map</h1>
+               
+                       <div id="map" class="mb-6"></div>
+               
+                       <form id="addPlaceForm" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-end">
+                           <div class="md:col-span-1">
+                               <label for="placeName" class="block text-sm font-medium text-gray-700 mb-1">Place Name</label>
+                               <input type="text" id="placeName" name="placeName" required placeholder="e.g., Eiffel Tower, Paris"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                           </div>
+                           <div class="md:col-span-1">
+                               <label for="placeType" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                               <select id="placeType" name="placeType"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                   <option value="want">Want to Go</option>
+                                   <option value="been">Been There</option>
+                               </select>
+                           </div>
+                           <div class="md:col-span-1">
+                                <button type="submit" id="addPlaceButton"
+                                       class="w-full inline-flex justify-center items-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span id="buttonSpinner" class="spinner hidden"></span>
+                                    <span id="buttonText">Add Place to Map</span>
+                               </button>
+                           </div>
+                       </form>
+               
+                       <div id="placesListContainer">
+                           <h2 class="text-xl font-semibold mb-3 text-gray-700">My Places</h2>
+                           <ul id="placesList" class="list-none p-0 m-0 divide-y divide-gray-200">
+                               <li id="no-places-message" class="text-gray-500 italic p-3 text-center">No places added yet.</li>
+                           </ul>
+                       </div>
+               
+                       <div id="messageBox" class="fixed bottom-4 right-4 bg-red-500 text-white p-3 rounded-md shadow-lg hidden z-50">
+                           <span id="messageText"></span>
+                           <button onclick="hideMessage()" class="ml-4 font-bold text-lg leading-none">&times;</button>
+                       </div>
+               
+                   </div>
+               
+                   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+                           crossorigin=""></script>
+               
+                   <script>
+                       // --- Map Initialization ---
+                       const map = L.map('map').setView([20, 0], 2);
+                       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                           maxZoom: 19,
+                           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                       }).addTo(map);
+               
+                       // --- Global Variables ---
+                       const placesListElement = document.getElementById('placesList');
+                       const addPlaceForm = document.getElementById('addPlaceForm');
+                       const addPlaceButton = document.getElementById('addPlaceButton');
+                       const buttonSpinner = document.getElementById('buttonSpinner');
+                       const buttonText = document.getElementById('buttonText');
+                       const noPlacesMessage = document.getElementById('no-places-message');
+                       const messageBox = document.getElementById('messageBox');
+                       const messageText = document.getElementById('messageText');
+                       let places = [];
+                       let markerLayer = L.layerGroup().addTo(map);
+               
+                       // --- Custom Marker Icons (SVG) ---
+                       function createMarkerIcon(color) {
+                           // UPDATED: SVG Star icon
+                           const svgIcon = `
+                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" class="w-6 h-6">
+                                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354l-4.543 2.863c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                               </svg>
+                           `;
+                           return L.divIcon({
+                               html: `<div class="custom-marker-icon">${svgIcon}</div>`,
+                               className: '', // Important: Reset Leaflet's default icon styles
+                               iconSize: [30, 30], // Size of the icon
+                               iconAnchor: [15, 15], // Adjusted anchor to center of the star
+                               popupAnchor: [0, -15] // Adjusted popup anchor relative to new icon anchor
+                           });
+                       }
+               
+                       // Define icons with updated color for 'been there'
+                       const wantToGoIcon = createMarkerIcon('#EF4444'); // Red-500 Star
+                       const beenThereIcon = createMarkerIcon('#3B82F6'); // Blue-500 Star
+               
+                       // --- Message Box Functions ---
+                       let messageTimeout; // Store timeout ID
+                       function showMessage(text, isError = true) {
+                           clearTimeout(messageTimeout); // Clear previous timeout if any
+                           messageText.textContent = text;
+                           messageBox.classList.remove('hidden', 'bg-red-500', 'bg-green-500');
+                           messageBox.classList.add(isError ? 'bg-red-500' : 'bg-green-500');
+               
+                           // Hide after 5 seconds
+                           messageTimeout = setTimeout(hideMessage, 5000);
+                       }
+               
+                       function hideMessage() {
+                           messageBox.classList.add('hidden');
+                       }
+               
+                       // --- Button Loading State ---
+                       function setButtonLoading(isLoading) {
+                           if (isLoading) {
+                               addPlaceButton.disabled = true;
+                               buttonSpinner.classList.remove('hidden');
+                               buttonText.textContent = 'Searching...';
+                           } else {
+                               addPlaceButton.disabled = false;
+                               buttonSpinner.classList.add('hidden');
+                               buttonText.textContent = 'Add Place to Map';
+                           }
+                       }
+               
+                       // --- Geocoding Function ---
+                       /**
+                        * Uses Nominatim API to find coordinates for a place name.
+                        * @param {string} placeName - The name of the place to search for.
+                        * @returns {Promise<object|null>} A promise resolving to {lat, lon, displayName} or null if not found/error.
+                        */
+                       async function geocodePlace(placeName) {
+                           const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(placeName)}&format=json&limit=1&addressdetails=1`;
+                           console.log("Geocoding URL:", url); // Log the URL for debugging
+               
+                           try {
+                               // Add user agent header as per Nominatim policy recommendation
+                               const response = await fetch(url, {
+                                   headers: {
+                                       'Accept': 'application/json',
+                                       'User-Agent': 'MyTravelMapApp/1.0 (https://example.com)' // Replace with your app info if deployed
+                                   }
+                               });
+               
+                               if (!response.ok) {
+                                   // Provide more specific feedback for common errors
+                                   if (response.status === 429) {
+                                        throw new Error(`Too many requests. Please wait before trying again. (HTTP ${response.status})`);
+                                   }
+                                   throw new Error(`HTTP error! status: ${response.status}`);
+                               }
+               
+                               const data = await response.json();
+                               console.log("Geocoding response:", data); // Log the response data
+               
+                               if (data && data.length > 0) {
+                                   const result = data[0];
+                                   return {
+                                       lat: parseFloat(result.lat),
+                                       lon: parseFloat(result.lon),
+                                       displayName: result.display_name // Get the full name found
+                                   };
+                               } else {
+                                   return null; // Place not found
+                               }
+                           } catch (error) {
+                               console.error("Geocoding failed:", error);
+                               // Display the specific error message from the caught error
+                               showMessage(`Geocoding request failed: ${error.message}`);
+                               return null; // Error occurred
+                           }
+                       }
+               
+               
+                       // --- Place Management Functions ---
+               
+                       /**
+                        * Adds a place to the map and list.
+                        */
+                       function addPlace(name, lat, lon, type, id = Date.now().toString(), displayName = name) {
+                            // Basic validation
+                           if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+                               console.error("Invalid coordinates passed to addPlace:", lat, lon);
+                               showMessage("Internal error: Invalid coordinates received.");
+                               return null;
+                           }
+               
+                           const icon = type === 'been' ? beenThereIcon : wantToGoIcon; // Selects blue or red star icon
+                           const marker = L.marker([lat, lon], { icon: icon })
+                               .addTo(markerLayer)
+                               .bindPopup(`<b>${displayName}</b><br>${type === 'been' ? 'Been There!' : 'Want to Go!'}`);
+               
+                           const place = { id, name: displayName, lat, lon, type, marker }; // Use displayName
+                           places.push(place);
+                           addPlaceToListDOM(place);
+                           updateNoPlacesMessage();
+                           return place;
+                       }
+               
+                       /**
+                        * Removes a place by its ID.
+                        */
+                       function removePlace(id) {
+                           const index = places.findIndex(p => p.id === id);
+                           if (index > -1) {
+                               const placeToRemove = places[index];
+                               markerLayer.removeLayer(placeToRemove.marker); // Remove marker from the map layer
+                               places.splice(index, 1); // Remove place from the array
+                               const listItem = document.getElementById(`place-${id}`);
+                               if (listItem) listItem.remove(); // Remove place from the list in the DOM
+                               updateNoPlacesMessage(); // Update the 'no places' message if needed
+                               savePlacesToLocalStorage(); // Save the updated list to local storage
+                               showMessage(`Removed "${placeToRemove.name}"`, false); // Show success message
+                           } else {
+                               console.warn(`Place with ID ${id} not found for removal.`);
+                           }
+                       }
+               
+                       /**
+                        * Adds a place object to the visual list in the HTML.
+                        */
+                       function addPlaceToListDOM(place) {
+                           const listItem = document.createElement('li');
+                           listItem.id = `place-${place.id}`;
+                           // Apply Tailwind classes for styling list items
+                           listItem.className = 'place-item flex justify-between items-center p-3 hover:bg-gray-50 rounded-md';
+               
+                           // Container for place name and type, makes it clickable
+                           const infoDiv = document.createElement('div');
+                           infoDiv.className = 'flex-grow mr-4 cursor-pointer overflow-hidden'; // Added overflow-hidden
+                           infoDiv.onclick = () => { // Pan map to marker on click
+                               map.setView([place.lat, place.lon], 13); // Zoom in closer
+                               place.marker.openPopup(); // Open the marker's popup
+                           };
+               
+                           // Display place name
+                           const nameSpan = document.createElement('span');
+                           nameSpan.textContent = place.name; // Use the (potentially longer) display name
+                           nameSpan.className = 'font-medium text-gray-800 block truncate'; // Added block truncate
+               
+                           // Display place type ('Been There' or 'Want to Go')
+                           const typeSpan = document.createElement('span');
+                           typeSpan.textContent = place.type === 'been' ? 'Been There' : 'Want to Go';
+                           // Apply different text colors based on type
+                           typeSpan.className = `text-xs ${place.type === 'been' ? 'text-blue-600' : 'text-red-600'}`; // Updated 'been' color to blue
+               
+                           infoDiv.appendChild(nameSpan);
+                           infoDiv.appendChild(typeSpan);
+               
+                           // Delete button for the list item
+                           const deleteButton = document.createElement('button');
+                           deleteButton.textContent = 'Delete';
+                           // Style the delete button
+                           deleteButton.className = 'text-red-500 hover:text-red-700 text-xs font-semibold px-2 py-1 rounded border border-red-300 hover:border-red-500 transition duration-150 ease-in-out flex-shrink-0'; // Keep button from shrinking
+                           deleteButton.onclick = (e) => {
+                               e.stopPropagation(); // Prevent the click from triggering the infoDiv click
+                               // Confirm before deleting
+                               if (confirm(`Are you sure you want to remove "${place.name}"?`)) {
+                                   removePlace(place.id);
+                               }
+                           };
+               
+                           listItem.appendChild(infoDiv);
+                           listItem.appendChild(deleteButton);
+                           // Add the new list item to the list, inserting before the 'no places' message
+                           placesListElement.insertBefore(listItem, noPlacesMessage);
+                       }
+               
+                       /**
+                        * Updates the visibility of the 'No places added yet' message.
+                        */
+                       function updateNoPlacesMessage() {
+                           // Show the message if the places array is empty, hide otherwise
+                           noPlacesMessage.style.display = places.length === 0 ? 'block' : 'none';
+                       }
+               
+               
+                       // --- Local Storage ---
+               
+                       /**
+                        * Saves the current places array to local storage.
+                        */
+                       function savePlacesToLocalStorage() {
+                           // Map the places array to exclude the Leaflet marker object, which can't be stringified
+                           const placesToSave = places.map(({ id, name, lat, lon, type }) => ({ id, name, lat, lon, type }));
+                           localStorage.setItem('travelMapPlaces', JSON.stringify(placesToSave));
+                       }
+               
+                       /**
+                        * Loads places from local storage and adds them to the map/list.
+                        */
+                       function loadPlacesFromLocalStorage() {
+                           const savedPlaces = localStorage.getItem('travelMapPlaces');
+                           if (savedPlaces) {
+                               try {
+                                   const parsedPlaces = JSON.parse(savedPlaces);
+                                   // Clear existing markers/list before loading
+                                   markerLayer.clearLayers(); // Remove all markers from the map layer
+                                   // Remove all list items except the 'no places' message
+                                   Array.from(placesListElement.children).forEach(child => {
+                                        if (child.id !== 'no-places-message') {
+                                            child.remove();
+                                        }
+                                   });
+                                   places = []; // Reset internal array
+               
+                                   // Add each saved place back to the map and list
+                                   parsedPlaces.forEach(place => {
+                                       addPlace(place.name, place.lat, place.lon, place.type, place.id, place.name);
+                                   });
+                               } catch (e) {
+                                   console.error("Error parsing places from local storage:", e);
+                                   localStorage.removeItem('travelMapPlaces'); // Clear potentially corrupted data
+                                    showMessage("Could not load saved places. Storage might be corrupted.");
+                               }
+                           }
+                            updateNoPlacesMessage(); // Update message visibility after loading
+                       }
+               
+               
+                       // --- Event Listeners ---
+               
+                       // Handle form submission for adding a new place
+                       addPlaceForm.addEventListener('submit', async function(event) {
+                           event.preventDefault(); // Prevent default page reload
+                           hideMessage(); // Hide any previous status messages
+               
+                           const nameInput = document.getElementById('placeName');
+                           const placeName = nameInput.value.trim(); // Get and trim the place name
+                           const type = document.getElementById('placeType').value; // Get selected type
+               
+                           // Basic validation for place name
+                           if (!placeName) {
+                                showMessage("Please enter a place name.");
+                                nameInput.focus(); // Focus the input field
+                                return;
+                           }
+               
+                           setButtonLoading(true); // Show loading state on the button
+               
+                           try {
+                               // Call the geocoding service
+                               const location = await geocodePlace(placeName);
+               
+                               if (location) {
+                                   // Geocoding successful, add the place to the map/list
+                                   const newPlace = addPlace(placeName, location.lat, location.lon, type, undefined, location.displayName);
+               
+                                   if (newPlace) {
+                                       savePlacesToLocalStorage(); // Save updated list
+                                       addPlaceForm.reset(); // Clear the form fields
+                                       map.setView([location.lat, location.lon], 10); // Pan map to the new place
+                                       newPlace.marker.openPopup(); // Open the popup for the new place
+                                       showMessage(`Added "${location.displayName}" to the map!`, false); // Show success message
+                                   }
+                                   // addPlace function handles internal errors if coordinates are invalid
+                               } else {
+                                   // Geocoding failed to find the place
+                                   showMessage(`Could not find coordinates for "${placeName}". Please try a more specific name.`);
+                                   nameInput.focus(); // Focus back on the input for correction
+                               }
+                           } catch (error) {
+                               // Catch unexpected errors during the process
+                               console.error("Error adding place:", error);
+                               // A specific message might have already been shown by geocodePlace
+                               if (messageBox.classList.contains('hidden')) {
+                                  showMessage("An unexpected error occurred while adding the place.");
+                               }
+                           } finally {
+                               setButtonLoading(false); // Ensure loading state is removed
+                           }
+                       });
+               
+                       // --- Initial Load ---
+                       // Load saved places when the DOM is fully loaded
+                       document.addEventListener('DOMContentLoaded', loadPlacesFromLocalStorage);
+               
+                   </script>
+                   
+                </div>
+                <br><br>
+                <a>View Caroline's Resume</a>
+                <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="/resume.html">Go to resume →</a></div>
+                <br>
+                <a>View Potential Destinations</a>
+                <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="/scratch/destinations.html">Go to destinations →</a></div>
+            </div>
+        </div>
+        <!-- Footer-->
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
